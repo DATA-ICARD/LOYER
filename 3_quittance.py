@@ -12,6 +12,7 @@ adresse_location = os.getenv('adresse_location')
 IBAN = os.getenv('IBAN')
 BIC = os.getenv('BIC')
 nom_proprio = os.getenv('nom_proprio')
+locataire = os.getenv('locataire')
 
 # Vérifier que les variables sont bien chargées
 if not all([adresse_proprio, adresse_location, IBAN, BIC, nom_proprio]):
@@ -37,8 +38,8 @@ ax.axis('off')
 
 # Ajouter le texte
 ax.text(0.5, 0.9, f"Quittance de loyer pour le mois de : {mois} {annee}", fontsize=12, ha='center', va='center', zorder=2)
-ax.text(0.1, 0.8, "Locataire : B&B Congiergerie", fontsize=10, zorder=2)
-ax.text(0.1, 0.75, "Propriétaire : ICARD Yannick et CANIPAROLI Céline", fontsize=10, zorder=2)
+ax.text(0.1, 0.8, f"Locataire : {locataire}", fontsize=10, zorder=2)
+ax.text(0.1, 0.75, f"Propriétaire : {nom_proprio}", fontsize=10, zorder=2)
 ax.text(0.1, 0.7, f"Adresse du propriétaire : {adresse_proprio}", fontsize=10, zorder=2)
 ax.text(0.1, 0.65, f"Adresse du bien loué : {adresse_location}", fontsize=10, zorder=2)
 ax.text(0.1, 0.6, "Montant du loyer réglé : 500 €", fontsize=10, zorder=2)
