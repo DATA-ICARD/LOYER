@@ -1,0 +1,6 @@
+pour accéder à un enrironnement virtuel :
+Création : 
+python -m venv venv
+puis :
+source venv/Scripts/activate
+pour l'activer
