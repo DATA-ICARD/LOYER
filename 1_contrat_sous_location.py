@@ -55,7 +55,7 @@ ax.text(0.1, 0.05, f"""  Signature du locataire précédée de la mention « lu 
 ax.text(0.1, 0.02, f"""                         Lu et Approuvé""", fontsize=9)
 
 # Ajouter une image de signature
-signature_path = "C:/appartement/valbenoite/echeance/signature.png"
+signature_path = os.path.join(os.path.dirname(__file__), 'signature.png')
 try:
     img = mpimg.imread(signature_path)
     # Ajuster la position et la taille de l'image (x_min, x_max, y_min, y_max)
