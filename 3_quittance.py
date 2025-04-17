@@ -46,7 +46,7 @@ ax.text(0.1, 0.6, "Montant du loyer réglé : 500 €", fontsize=10, zorder=2)
 ax.text(0.1, 0.55, f"Période concernée : {mois} {annee}", fontsize=10, zorder=2)
 
 # Ajouter une image de signature
-signature_path = "C:/appartement/valbenoite/echeance/signature.png"
+signature_path = os.path.join(os.path.dirname(__file__), 'signature.png')
 try:
     img = mpimg.imread(signature_path)
     # Ajuster la position et la taille de l'image (x_min, x_max, y_min, y_max)
