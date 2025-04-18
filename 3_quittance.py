@@ -7,12 +7,12 @@ from datetime import datetime
 import locale
 
 load_dotenv()  # Charge les variables d'environnement depuis le fichier .env
-adresse_proprio = os.getenv('adresse_proprio')
-adresse_location = os.getenv('adresse_location')
+adresse_proprio = os.getenv('ADRESSE_PROPRIO')
+adresse_location = os.getenv('ADRESSE_LOCATION')
 IBAN = os.getenv('IBAN')
 BIC = os.getenv('BIC')
-nom_proprio = os.getenv('nom_proprio')
-locataire = os.getenv('locataire')
+nom_proprio = os.getenv('NOM_PROPRIO')
+locataire = os.getenv('LOCATAIRE')
 
 # Vérifier que les variables sont bien chargées
 if not all([adresse_proprio, adresse_location, IBAN, BIC, nom_proprio]):
