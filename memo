@@ -6,3 +6,4 @@ source venv/Scripts/activate
 pour récupérer tous les packages dans un requirements.txt faire :
 pip freeze > requirements.txt
 et ça copie tout !!!!
+Le fichier .env est en Git ignore et n'est aps visible
