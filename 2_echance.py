@@ -7,11 +7,11 @@ import locale
 
 
 load_dotenv()  # Charge les variables d'environnement depuis le fichier .env
-adresse_proprio = os.getenv('adresse_proprio')
-adresse_location = os.getenv('adresse_location')
+adresse_proprio = os.getenv('ADRESSE_PROPRIO')
+adresse_location = os.getenv('ADRESSE_LOCATION')
 IBAN = os.getenv('IBAN')
 BIC = os.getenv('BIC')
-nom_proprio = os.getenv('nom_proprio')
+nom_proprio = os.getenv('MON_PROPRIOgit add')
 
 # Définir la locale en français
 locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
