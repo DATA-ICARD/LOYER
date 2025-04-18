@@ -1,40 +1,53 @@
 import matplotlib.pyplot as plt
 from IPython.display import display, FileLink
-from dotenv import load_dotenv
 import os
 from datetime import datetime
 import locale
 
+# Essayer de charger les variables depuis un .env (utile en local)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    print("dotenv non installé, les variables seront récupérées via l'environnement système uniquement.")
 
-load_dotenv()  # Charge les variables d'environnement depuis le fichier .env
-adresse_proprio = os.getenv('adresse_proprio')
-adresse_location = os.getenv('adresse_location')
+# Récupérer les variables d'environnement
+adresse_proprio = os.getenv('ADRESSE_PROPRIO')
+adresse_location = os.getenv('ADRESSE_LOCATION')
 IBAN = os.getenv('IBAN')
 BIC = os.getenv('BIC')
-nom_proprio = os.getenv('nom_proprio')
+nom_proprio = os.getenv('NOM_PROPRIO')  # ici tu avais une typo MON_PROPRIOgit add
+
+# Vérifier que les variables essentielles sont bien chargées
+if not all([adresse_proprio, adresse_location, IBAN, BIC, nom_proprio]):
+    print("⚠️ Attention : Une ou plusieurs variables d'environnement sont manquantes.")
+    adresse_proprio = adresse_proprio or "Adresse proprio non définie"
+    adresse_location = adresse_location or "Adresse location non définie"
+    nom_proprio = nom_proprio or "Nom proprio non défini"
+    IBAN = IBAN or "IBAN non défini"
+    BIC = BIC or "BIC non défini"
 
 # Définir la locale en français
-locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
+try:
+    locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
+except locale.Error:
+    print("Locale fr_FR.UTF-8 non disponible, fallback sur locale système.")
 
 # Récupérer la date actuelle
 now = datetime.now()
-
-# Extraire le mois et l'année
-mois = now.strftime("%B")  # %B donne le nom complet du mois
+mois = now.strftime("%B")
 annee = now.year
 
 # Create a PDF document using matplotlib
 fig, ax = plt.subplots(figsize=(8.5, 11))
-
-# Désactiver les axes
 ax.axis('off')
 
-# Set font and title
+# Set title
 ax.text(0.5, 0.9, f"Avis d'échéance de loyer pour le mois de : {mois} {annee}", fontsize=12, ha='center', va='center')
 
 # Add content to the PDF
-ax.text(0.1, 0.8, "Locataire : B&B Congiergerie", fontsize=10)
-ax.text(0.1, 0.75, "Propriétaire : ICARD Yannick et CANIPAROLI Céline", fontsize=10)
+ax.text(0.1, 0.8, "Locataire : B&B Conciergerie", fontsize=10)
+ax.text(0.1, 0.75, f"Propriétaire : {nom_proprio}", fontsize=10)
 ax.text(0.1, 0.7, f"Adresse du propriétaire : {adresse_proprio}", fontsize=10)
 ax.text(0.1, 0.65, f"Adresse du bien loué : {adresse_location}", fontsize=10)
 
@@ -46,10 +59,10 @@ ax.text(0.1, 0.3, "Méthode de paiement : Virement bancaire", fontsize=10)
 ax.text(0.1, 0.25, f"IBAN : {IBAN}", fontsize=10)
 ax.text(0.1, 0.2, f"BIC : {BIC}", fontsize=10)
 
-
 # Save the PDF
 pdf_path = f'avis_echeance_loyer_{mois}_{annee}.pdf'
-plt.savefig(pdf_path)
+plt.savefig(pdf_path, bbox_inches='tight')
 plt.close()
 
-pdf_path
+# Retourner le chemin du PDF généré
+print(f"✅ PDF : {pdf_path} généré")

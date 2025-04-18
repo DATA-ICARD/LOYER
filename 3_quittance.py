@@ -1,39 +1,48 @@
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from IPython.display import display, FileLink
-from dotenv import load_dotenv
 import os
 from datetime import datetime
 import locale
 
-load_dotenv()  # Charge les variables d'environnement depuis le fichier .env
-adresse_proprio = os.getenv('adresse_proprio')
-adresse_location = os.getenv('adresse_location')
+# Essayer de charger les variables depuis un .env (utile en local)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    print("dotenv non installé, les variables seront récupérées via l'environnement système uniquement.")
+
+# Récupérer les variables d'environnement (qu'elles viennent du .env ou des variables système)
+adresse_proprio = os.getenv('ADRESSE_PROPRIO')
+adresse_location = os.getenv('ADRESSE_LOCATION')
 IBAN = os.getenv('IBAN')
 BIC = os.getenv('BIC')
-nom_proprio = os.getenv('nom_proprio')
-locataire = os.getenv('locataire')
+nom_proprio = os.getenv('NOM_PROPRIO')
+locataire = os.getenv('LOCATAIRE')
 
-# Vérifier que les variables sont bien chargées
-if not all([adresse_proprio, adresse_location, IBAN, BIC, nom_proprio]):
-    print("Erreur : Une ou plusieurs variables d'environnement sont manquantes.")
+# Vérifier que les variables essentielles sont bien chargées
+if not all([adresse_proprio, adresse_location, IBAN, BIC, nom_proprio, locataire]):
+    print("⚠️ Attention : Une ou plusieurs variables d'environnement sont manquantes.")
     adresse_proprio = adresse_proprio or "Adresse proprio non définie"
     adresse_location = adresse_location or "Adresse location non définie"
+    nom_proprio = nom_proprio or "Nom proprio non défini"
+    locataire = locataire or "Locataire non défini"
+    IBAN = IBAN or "IBAN non défini"
+    BIC = BIC or "BIC non défini"
 
 # Définir la locale en français
-locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
+try:
+    locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
+except locale.Error:
+    print("Locale fr_FR.UTF-8 non disponible, fallback sur locale système.")
 
 # Récupérer la date actuelle
 now = datetime.now()
-
-# Extraire le mois et l'année
-mois = now.strftime("%B")  # %B donne le nom complet du mois
+mois = now.strftime("%B")  # Nom complet du mois
 annee = now.year
 
 # Create a PDF document using matplotlib
 fig, ax = plt.subplots(figsize=(8.5, 11))
-
-# Désactiver les axes
 ax.axis('off')
 
 # Ajouter le texte
@@ -47,20 +56,20 @@ ax.text(0.1, 0.55, f"Période concernée : {mois} {annee}", fontsize=10, zorder=
 
 # Ajouter une image de signature
 signature_path = os.path.join(os.path.dirname(__file__), 'signature.png')
-try:
+if os.path.exists(signature_path):
     img = mpimg.imread(signature_path)
-    # Ajuster la position et la taille de l'image (x_min, x_max, y_min, y_max)
     ax.imshow(img, extent=[0.5, 0.8, 0.3, 0.4], aspect='auto', zorder=1)
-except FileNotFoundError:
-    print(f"Erreur : L'image {signature_path} n'a pas été trouvée.")
+else:
+    print(f"⚠️ Image {signature_path} non trouvée")
 
-# Définir les limites de la figure pour s'assurer que tout est visible
+# Limites de la figure
 ax.set_xlim(0, 1)
 ax.set_ylim(0, 1)
 
-# Save the PDF
+# Save PDF
 pdf_path = f'quittance_loyer_{mois}_{annee}.pdf'
 plt.savefig(pdf_path, bbox_inches='tight')
 plt.close()
 
-pdf_path
+# Retourner le chemin du PDF généré
+print(f"✅ PDF : {pdf_path} générée")

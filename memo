@@ -1,6 +1,8 @@
 pour accéder à un enrironnement virtuel :
 Création : 
 python -m venv venv
-puis :
+puis pour l'activer :
 source venv/Scripts/activate
-pour l'activer
+pour récupérer tous les packages dans un requirements.txt faire :
+pip freeze > requirements.txt
+et ça copie tout !!!!
