@@ -1,9 +1,16 @@
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 import os
 from datetime import datetime
 import locale
+
+# Essayer de charger les variables depuis un .env (utile en local)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    print("dotenv non installé, les variables seront récupérées via l'environnement système uniquement.")
 
 # Charger les variables d'environnement
 load_dotenv()
@@ -13,16 +20,25 @@ IBAN = os.getenv('IBAN')
 BIC = os.getenv('BIC')
 nom_proprio = os.getenv('NOM_PROPRIO')
 
+# Vérifier que les variables essentielles sont bien chargées
+if not all([adresse_proprio, adresse_location, IBAN, BIC, nom_proprio]):
+    print("⚠️ Attention : Une ou plusieurs variables d'environnement sont manquantes.")
+    adresse_proprio = adresse_proprio or "Adresse proprio non définie"
+    adresse_location = adresse_location or "Adresse location non définie"
+    nom_proprio = nom_proprio or "Nom proprio non défini"
+    IBAN = IBAN or "IBAN non défini"
+    BIC = BIC or "BIC non défini"
+
 # Définir la locale en français
-locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
+try:
+    locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
+except locale.Error:
+    print("Locale fr_FR.UTF-8 non disponible, fallback sur locale système.")
 
 # Récupérer la date actuelle
-now = datetime.now()
-
-# Formater la date pour le contrat
-date_contrat = now.strftime("%d %B %Y")  # Ex. : 13 avril 2025
-mois = now.strftime("%B")  # Nom complet du mois
-annee = now.year
+date_contrat = datetime.now()
+mois = date_contrat.strftime("%B")  # Nom complet du mois
+annee = date_contrat.year
 
 # Créer un document PDF avec matplotlib
 fig, ax = plt.subplots(figsize=(8.5, 11))
@@ -61,7 +77,7 @@ try:
     # Ajuster la position et la taille de l'image (x_min, x_max, y_min, y_max)
     ax.imshow(img, extent=[0.5, 0.8, 0.02, 0.20], aspect='auto', zorder=1)
 except FileNotFoundError:
-    print(f"Erreur : L'image {signature_path} n'a pas été trouvée.")
+    print(f"⚠️ Erreur : L'image {signature_path} n'a pas été trouvée.")
 
 # Définir les limites de la figure pour s'assurer que tout est visible
 ax.set_xlim(0, 1)
@@ -72,4 +88,4 @@ pdf_path = f'contrat_sous_location_{mois}_{annee}.pdf'
 plt.savefig(pdf_path, format='pdf', bbox_inches='tight')
 plt.close()
 
-print(f"PDF généré : {pdf_path}")
+print(f"✅ PDF généré : {pdf_path}")
