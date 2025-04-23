@@ -15,8 +15,8 @@ from google.auth.transport.requests import Request
 
 # Charger les variables d'environnement depuis le fichier .env
 load_dotenv()
-nom_proprio = os.getenv('nom_proprio')
-destinataire_cci = os.getenv('destinataire_cci')
+nom_proprio = os.getenv('NOM_PROPRIO')
+destinataire_cci = os.getenv('DESTINATAIRE_CCI')
 # Définir la locale en français (adapter selon ton système)
 try:
     locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
