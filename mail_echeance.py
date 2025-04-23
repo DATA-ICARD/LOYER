@@ -91,5 +91,6 @@ body = {'raw': raw}
 try:
     message = service.users().messages().send(userId="me", body=body).execute()
     print("Email envoyé avec succès !")
+    os.remove(pdf_path)  # Supprime le fichier PDF après l'envoi
 except Exception as e:
     print(f"Erreur : {e}")
