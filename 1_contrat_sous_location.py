@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-#from dotenv import load_dotenv
 import os
 from datetime import datetime
 import locale
@@ -35,10 +34,10 @@ try:
 except locale.Error:
     print("Locale fr_FR.UTF-8 non disponible, fallback sur locale système.")
 
-# Récupérer la date actuelle
-date_contrat = datetime.now()
-mois = date_contrat.strftime("%B")  # Nom complet du mois
-annee = date_contrat.year
+# Récupérer la date actuelle au format jj-mm-yyyy
+date_contrat = datetime.now().strftime("%d-%m-%Y")
+mois = datetime.now().strftime("%B")  # Nom complet du mois
+annee = datetime.now().year
 
 # Créer un document PDF avec matplotlib
 fig, ax = plt.subplots(figsize=(8.5, 11))

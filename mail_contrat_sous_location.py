@@ -15,8 +15,8 @@ from google.auth.transport.requests import Request
 
 # Charger les variables d'environnement depuis le fichier .env
 load_dotenv()
-nom_proprio = os.getenv('nom_proprio')
-destinataire_cci = os.getenv('destinataire_cci')
+nom_proprio = os.getenv('NOM_PROPRIO')
+destinataire_cci = os.getenv('DESTINATAIRE_CCI')
 # Définir la locale en français (adapter selon ton système)
 try:
     locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
@@ -69,8 +69,9 @@ service = build('gmail', 'v1', credentials=creds)
 
 # Créer un message multipart (pour le texte et la pièce jointe)
 msg = MIMEMultipart()
-#msg['to'] = os.getenv('DESTINATAIRE')  # Adresse email du destinataire
-msg['Bcc'] = os.getenv('destinataire_cci')
+msg['to'] = 'yannick.icard@gmail.com'
+#os.getenv('DESTINATAIRE')  # Adresse email du destinataire
+msg['Bcc'] = os.getenv('DESTINATAIRE_CCI')
 msg['from'] = os.getenv('EXPEDITEUR')  # Adresse email de l'expéditeur
 msg['subject'] = sujet
 
@@ -93,5 +94,6 @@ body = {'raw': raw}
 try:
     message = service.users().messages().send(userId="me", body=body).execute()
     print("Email envoyé avec succès !")
+    os.remove(pdf_path)  # Supprime le fichier PDF après l'envoi
 except Exception as e:
     print(f"Erreur : {e}")
