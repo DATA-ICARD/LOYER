@@ -31,6 +31,13 @@ jobs:
       run: |
         echo "EMAIL_HOST=${{ secrets.ADRESSE_PROPRIO }}" >> $GITHUB_ENV
         echo "EMAIL_HOST=${{ secrets.ADRESSE_LOCATION }}" >> $GITHUB_ENV
+        echo "EMAIL_HOST=${{ secrets.IBAN }}" >> $GITHUB_ENV
+        echo "EMAIL_HOST=${{ secrets.BIC }}" >> $GITHUB_ENV
+        echo "EMAIL_HOST=${{ secrets.NOM_PROPRIO }}" >> $GITHUB_ENV
+        echo "EMAIL_HOST=${{ secrets.LOCATAIRE }}" >> $GITHUB_ENV
+        echo "EMAIL_HOST=${{ secrets.DESTINATAIRE }}" >> $GITHUB_ENV
+        echo "EMAIL_HOST=${{ secrets.DESTINATAIRE_CCI }}" >> $GITHUB_ENV
+        echo "EMAIL_HOST=${{ secrets.EXPEDITEUR }}" >> $GITHUB_ENV
         echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}" >> $GITHUB_ENV
         echo "EMAIL_PORT=${{ secrets.EMAIL_PORT }}" >> $GITHUB_ENV
         echo "EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}" >> $GITHUB_ENV
