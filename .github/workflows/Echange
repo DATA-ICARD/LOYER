@@ -26,6 +26,15 @@ jobs:
 
     - name: Inject environment variables from GitHub Secrets
       run: |
+        echo "ADRESSE_PROPRIO=${{ secrets.ADRESSE_PROPRIO }}" >> $GITHUB_ENV
+        echo "ADRESSE_LOCATION=${{ secrets.ADRESSE_LOCATION }}" >> $GITHUB_ENV
+        echo "IBAN=${{ secrets.IBAN }}" >> $GITHUB_ENV
+        echo "BIC=${{ secrets.BIC }}" >> $GITHUB_ENV
+        echo "NOM_PROPRIO=${{ secrets.NOM_PROPRIO }}" >> $GITHUB_ENV
+        echo "LOCATAIRE=${{ secrets.LOCATAIREc }}" >> $GITHUB_ENV
+        echo "DESTINATAIRE=${{ secrets.DESTINATAIRE }}" >> $GITHUB_ENV
+        echo "DESTINATAIRE_CCI=${{ secrets.DESTINATAIRE_CCI }}" >> $GITHUB_ENV
+        echo "EXPEDITEUR=${{ secrets.EXPEDITEUR }}" >> $GITHUB_ENV
         echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}" >> $GITHUB_ENV
         echo "EMAIL_PORT=${{ secrets.EMAIL_PORT }}" >> $GITHUB_ENV
         echo "EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}" >> $GITHUB_ENV
