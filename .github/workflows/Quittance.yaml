@@ -6,7 +6,7 @@ on:
     - cron: '00 11 20 * *'
 
 jobs:
-  test:
+  Quittance:
     runs-on: ubuntu-latest
 
     steps:
