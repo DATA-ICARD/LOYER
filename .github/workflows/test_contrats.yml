@@ -31,7 +31,7 @@ jobs:
         echo "DB_PATH=${{ secrets.DB_PATH }}" >> $GITHUB_ENV
 
     - name: Run 1_contrat_sous_location.py
-      run: python main/1_contrat_sous_location.py
+      run: python 1_contrat_sous_location.py
 
     - name: Run mail_contrat_sous_location.py
-      run: python main/mail_contrat_sous_location.py
+      run: python mail_contrat_sous_location.py
