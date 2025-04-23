@@ -6,12 +6,22 @@ on:
     - cron: '00 11 20 * *'
 
 jobs:
-  Quittance:
+  Contrat_Sous_Location:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+
+    - name: Install French locale
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y language-pack-fr
+        sudo locale-gen fr_FR.UTF-8
+        sudo update-locale LANG=fr_FR.UTF-8
+
+    - name: Set LC_ALL to fr_FR.UTF-8
+      run: echo "LC_ALL=fr_FR.UTF-8" >> $GITHUB_ENV
 
     - name: Set up Python
       uses: actions/setup-python@v4
