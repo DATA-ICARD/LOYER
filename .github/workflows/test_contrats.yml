@@ -1,7 +1,10 @@
-name: Test Contrats Scripts
+name: Contrat_Sous_Location
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # Garde cette option pour pouvoir déclencher manuellement
+  schedule:
+    # Cron pour le 1er du mois à 11h00 (UTC)
+    - cron: '0 11 1 * *'
 
 jobs:
   test:
@@ -10,12 +13,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-
-    - name: Set locale to fr_FR.UTF-8
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y language-pack-fr
-        sudo update-locale LANG=fr_FR.UTF-8
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -29,15 +26,6 @@ jobs:
 
     - name: Inject environment variables from GitHub Secrets
       run: |
-        echo "ADRESSE_PROPRIO=${{ secrets.ADRESSE_PROPRIO }}" >> $GITHUB_ENV
-        echo "ADRESSE_LOCATION=${{ secrets.ADRESSE_LOCATION }}" >> $GITHUB_ENV
-        echo "IBAN=${{ secrets.IBAN }}" >> $GITHUB_ENV
-        echo "BIC=${{ secrets.BIC }}" >> $GITHUB_ENV
-        echo "NOM_PROPRIO=${{ secrets.NOM_PROPRIO }}" >> $GITHUB_ENV
-        echo "LOCATAIRE=${{ secrets.LOCATAIRE }}" >> $GITHUB_ENV
-        echo "DESTINATAIRE=${{ secrets.DESTINATAIRE }}" >> $GITHUB_ENV
-        echo "DESTINATAIRE_CCI=${{ secrets.DESTINATAIRE_CCI }}" >> $GITHUB_ENV
-        echo "EXPEDITEUR=${{ secrets.EXPEDITEUR }}" >> $GITHUB_ENV
         echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}" >> $GITHUB_ENV
         echo "EMAIL_PORT=${{ secrets.EMAIL_PORT }}" >> $GITHUB_ENV
         echo "EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}" >> $GITHUB_ENV
