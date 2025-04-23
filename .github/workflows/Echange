@@ -1,0 +1,40 @@
+name: Echeance
+
+on:
+  workflow_dispatch:  # Garde cette option pour pouvoir déclencher manuellement
+  schedule:
+    # Cron pour le 1er du mois à 11h30 (UTC)
+    - cron: '30 11 1 * *'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Inject environment variables from GitHub Secrets
+      run: |
+        echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}" >> $GITHUB_ENV
+        echo "EMAIL_PORT=${{ secrets.EMAIL_PORT }}" >> $GITHUB_ENV
+        echo "EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}" >> $GITHUB_ENV
+        echo "EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}" >> $GITHUB_ENV
+        echo "GOOGLE_SHEET_URL=${{ secrets.GOOGLE_SHEET_URL }}" >> $GITHUB_ENV
+        echo "DB_PATH=${{ secrets.DB_PATH }}" >> $GITHUB_ENV
+
+    - name: Run 2_echance.py
+      run: python 2_echance.py
+
+    - name: Run mail_echeance.py
+      run: python mail_echeance.py
