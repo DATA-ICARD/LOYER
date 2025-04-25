@@ -18,6 +18,7 @@ adresse_location = os.getenv('ADRESSE_LOCATION')  # Valeur par défaut
 IBAN = os.getenv('IBAN')
 BIC = os.getenv('BIC')
 nom_proprio = os.getenv('NOM_PROPRIO')
+locataire = os.getenv('LOCATAIRE')
 
 # Vérifier que les variables essentielles sont bien chargées
 if not all([adresse_proprio, adresse_location, IBAN, BIC, nom_proprio]):
@@ -46,7 +47,7 @@ ax.axis('off')  # Désactiver les axes
 # Ajouter le contenu du contrat
 ax.text(0.5, 0.95, f"""\n\nContrat de sous-location\n\n""", fontweight='bold', ha='center', fontsize=12)
 ax.text(0.1, 0.90, f"""Le contrat de bail de sous-location est conclu entre les soussignés :\n\n""", fontsize=9)
-ax.text(0.1, 0.88, f"""B&B conciergerie, désigné ci-après « le locataire principal » d’une part, et {nom_proprio},\n""", fontsize=9)
+ax.text(0.1, 0.88, f"""{locataire}, désigné ci-après « le locataire principal » d’une part, et {nom_proprio},\n""", fontsize=9)
 ax.text(0.1, 0.85, f"""désigné ci-après « le bailleur » d’autre part.\n""", fontsize=9)
 ax.text(0.1, 0.82, f"""Il est rappelé que le propriétaire du logement situé au {adresse_location}\n""", fontsize=9)
 ax.text(0.1, 0.79, f"""autorise la sous-location de son bien par une lettre adressée au locataire principal, et dont\n""", fontsize=9)
