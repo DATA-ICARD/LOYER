@@ -25,7 +25,7 @@ except locale.Error:
 
 # Récupérer la date actuelle
 now = datetime.now()
-mois = now.strftime("%B")  # Nom complet du mois (ex. "avril")
+mois = now.strftime("%B").lower()  # Nom complet du mois (ex. "avril")
 annee = now.year
 
 # Sujet et corps du message
