@@ -36,7 +36,7 @@ Cordialement,
 {nom_proprio}"""
 
 # Chemin du fichier PDF
-pdf_path = f'Quittance_loyer_{mois}_{annee}.pdf'
+pdf_path = f'quittance_loyer_{mois}_{annee}.pdf'
 
 # Vérifier que le fichier PDF existe
 if not os.path.exists(pdf_path):
