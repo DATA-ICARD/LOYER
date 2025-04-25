@@ -8,7 +8,7 @@ import locale
 # Essayer de charger les variables depuis un .env (utile en local)
 try:
     from dotenv import load_dotenv
-    load_dotenv()
+    load_dotenv(override=False)
 except ImportError:
     print("dotenv non installé, les variables seront récupérées via l'environnement système uniquement.")
 
