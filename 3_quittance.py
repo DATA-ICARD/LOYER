@@ -71,5 +71,9 @@ pdf_path = f'quittance_loyer_{mois}_{annee}.pdf'
 plt.savefig(pdf_path, bbox_inches='tight')
 plt.close()
 
+# Sauvegarder le nom du fichier PDF dans un fichier texte
+with open('quittance_path.txt', 'w') as f:
+    f.write(pdf_path)
+    
 # Retourner le chemin du PDF généré
 print(f"✅ PDF : {pdf_path} générée")
