@@ -38,7 +38,7 @@ except locale.Error:
 
 # Récupérer la date actuelle
 now = datetime.now()
-mois = now.strftime("%B")  # Nom complet du mois
+mois = now.strftime("%B").lower()  # Nom complet du mois
 annee = now.year
 
 # Create a PDF document using matplotlib
