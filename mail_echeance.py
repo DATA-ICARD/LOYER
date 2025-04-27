@@ -70,6 +70,7 @@ service = build('gmail', 'v1', credentials=creds)
 msg = MIMEMultipart()
 msg['to'] = 'yannick.icard@gmail.com' 
 # os.getenv('DESTINATAIRE')  # Adresse email du destinataire
+msg['Bcc'] = os.getenv('DESTINATAIRE_CCI')
 msg['from'] = os.getenv('EXPEDITEUR')  # Adresse email de l'expéditeur
 msg['subject'] = sujet
 
