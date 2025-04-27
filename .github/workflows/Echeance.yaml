@@ -42,7 +42,7 @@ jobs:
         echo "IBAN=${{ secrets.IBAN }}" >> $GITHUB_ENV
         echo "BIC=${{ secrets.BIC }}" >> $GITHUB_ENV
         echo "NOM_PROPRIO=${{ secrets.NOM_PROPRIO }}" >> $GITHUB_ENV
-        echo "LOCATAIRE=${{ vars.LOCATAIRE }}" >> $GITHUB_ENVgit 
+        echo "LOCATAIRE=${{ vars.LOCATAIRE }}" >> $GITHUB_ENV
         echo "DESTINATAIRE=${{ secrets.DESTINATAIRE }}" >> $GITHUB_ENV
         echo "DESTINATAIRE_CCI=${{ secrets.DESTINATAIRE_CCI }}" >> $GITHUB_ENV
         echo "EXPEDITEUR=${{ secrets.EXPEDITEUR }}" >> $GITHUB_ENV
