@@ -12,11 +12,13 @@ from dotenv import load_dotenv
 from datetime import datetime
 from google.auth.transport.requests import Request
 
-
 # Charger les variables d'environnement depuis le fichier .env
 load_dotenv()
 nom_proprio = os.getenv('NOM_PROPRIO')
+destinataire = os.getenv('DESTINATAIRE')
 destinataire_cci = os.getenv('DESTINATAIRE_CCI')
+expediteur = os.getenv('EXPEDITEUR')
+
 # Définir la locale en français (adapter selon ton système)
 try:
     locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
@@ -31,7 +33,7 @@ annee = now.year
 # Sujet et corps du message
 sujet = f"Contrat de sous location "
 corps = f"""Bonjour,
-Voici le contrat de sous location pour le mois de : {mois} {annee}. 
+Voici le contrat de sous location pour le mois de : {mois} {annee}.
 Cordialement,
 {nom_proprio}"""
 
@@ -52,17 +54,21 @@ TOKEN_FILE = 'token.json'
 creds = None
 if os.path.exists(TOKEN_FILE):
     creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
+    print("Tokens chargés depuis le fichier.")
 
 # Si aucun jeton valide n'existe, demander une nouvelle autorisation
 if not creds or not creds.valid:
     if creds and creds.expired and creds.refresh_token:
+        print("Rafraîchissement du token...")
         creds.refresh(Request())
     else:
+        print("Obtention d'un nouveau token...")
         flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-        creds = flow.run_local_server(port=0)
+        creds = flow.run_local_server(port=0, prompt='consent')
     # Sauvegarder les jetons pour une utilisation future
     with open(TOKEN_FILE, 'w') as token:
         token.write(creds.to_json())
+        print("Nouveaux tokens sauvegardés.")
 
 # Construire le service Gmail
 service = build('gmail', 'v1', credentials=creds)
@@ -70,9 +76,9 @@ service = build('gmail', 'v1', credentials=creds)
 # Créer un message multipart (pour le texte et la pièce jointe)
 msg = MIMEMultipart()
 msg['to'] = 'yannick.icard@gmail.com'
-#os.getenv('DESTINATAIRE')  # Adresse email du destinataire
+#os.getenv('DESTINATAIRE')
 msg['Bcc'] = os.getenv('DESTINATAIRE_CCI')
-msg['from'] = os.getenv('EXPEDITEUR')  # Adresse email de l'expéditeur
+msg['from'] =  os.getenv('EXPEDITEUR') # Adresse email de l'expéditeur
 msg['subject'] = sujet
 
 # Ajouter le corps du message
