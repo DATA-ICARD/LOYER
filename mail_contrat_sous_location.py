@@ -71,7 +71,6 @@ service = build('gmail', 'v1', credentials=creds)
 
 # Créer un message multipart (pour le texte et la pièce jointe)
 msg = MIMEMultipart()
-print(f"adresse mail to: {destinataire})
 msg['to'] = destinataire  # Adresse email du destinataire
 msg['Bcc'] = destinataire_cci
 msg['from'] = expediteur # Adresse email de l'expéditeur
