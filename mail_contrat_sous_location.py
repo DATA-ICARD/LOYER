@@ -16,7 +16,7 @@ from google.auth.transport.requests import Request
 # Charger les variables d'environnement depuis le fichier .env
 load_dotenv()
 nom_proprio = os.getenv('NOM_PROPRIO')
-destinataire = os.getenv('DESTINAITAIRE')
+destinataire = os.getenv('DESTINATAIRE')
 destinataire_cci = os.getenv('DESTINATAIRE_CCI')
 expediteur = os.getenv('EXPEDITEUR')
 # Définir la locale en français (adapter selon ton système)
@@ -61,7 +61,7 @@ if not creds or not creds.valid:
         creds.refresh(Request())
     else:
         flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-        creds = flow.run_local_server(port=0)
+        creds = flow.run_local_server(port=0, prompt='consent')
     # Sauvegarder les jetons pour une utilisation future
     with open(TOKEN_FILE, 'w') as token:
         token.write(creds.to_json())
@@ -72,9 +72,9 @@ service = build('gmail', 'v1', credentials=creds)
 # Créer un message multipart (pour le texte et la pièce jointe)
 msg = MIMEMultipart()
 print(f"adresse mail to: {destinataire})
-msg['to'] = os.getenv('destinataire')  # Adresse email du destinataire
-msg['Bcc'] = os.getenv('destinataire_cci')
-msg['from'] = os.getenv('expediteur')  # Adresse email de l'expéditeur
+msg['to'] = destinataire  # Adresse email du destinataire
+msg['Bcc'] = destinataire_cci
+msg['from'] = expediteur # Adresse email de l'expéditeur
 msg['subject'] = sujet
 
 # Ajouter le corps du message
