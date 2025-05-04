@@ -7,12 +7,22 @@ on:
     - cron: '30 11 1 * *'
 
 jobs:
-  test:
+  Echeance:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+
+    - name: Install French locale
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y language-pack-fr
+        sudo locale-gen fr_FR.UTF-8
+        sudo update-locale LANG=fr_FR.UTF-8
+
+    - name: Set LC_ALL to fr_FR.UTF-8
+      run: echo "LC_ALL=fr_FR.UTF-8" >> $GITHUB_ENV
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -31,7 +41,7 @@ jobs:
         echo "IBAN=${{ secrets.IBAN }}" >> $GITHUB_ENV
         echo "BIC=${{ secrets.BIC }}" >> $GITHUB_ENV
         echo "NOM_PROPRIO=${{ secrets.NOM_PROPRIO }}" >> $GITHUB_ENV
-        echo "LOCATAIRE=${{ secrets.LOCATAIRE }}" >> $GITHUB_ENV
+        echo "LOCATAIRE=${{ vars.LOCATAIRE }}" >> $GITHUB_ENV
         echo "DESTINATAIRE=${{ secrets.DESTINATAIRE }}" >> $GITHUB_ENV
         echo "DESTINATAIRE_CCI=${{ secrets.DESTINATAIRE_CCI }}" >> $GITHUB_ENV
         echo "EXPEDITEUR=${{ secrets.EXPEDITEUR }}" >> $GITHUB_ENV
@@ -41,6 +51,9 @@ jobs:
         echo "EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}" >> $GITHUB_ENV
         echo "GOOGLE_SHEET_URL=${{ secrets.GOOGLE_SHEET_URL }}" >> $GITHUB_ENV
         echo "DB_PATH=${{ secrets.DB_PATH }}" >> $GITHUB_ENV
+        echo "CLIENT_ID=${{ secrets.CLIENT_ID }}" >> $GITHUB_ENV
+        echo "CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}" >> $GITHUB_ENV
+        echo "REFRESH_TOKEN=${{ secrets.REFRESH_TOKEN }}" >> $GITHUB_ENV
 
     - name: Run 2_echance.py
       run: python 2_echance.py
