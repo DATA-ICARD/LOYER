@@ -2,20 +2,32 @@ import base64
 import os
 import locale
 from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
-from dotenv import load_dotenv
 from datetime import datetime
-from google.auth.transport.requests import Request
 
-
-# Charger les variables d'environnement depuis le fichier .env
-load_dotenv()
+# Charger les variables d'environnement depuis les secrets GitHub
+client_id = os.getenv('CLIENT_ID')
+client_secret = os.getenv('CLIENT_SECRET')
+refresh_token = os.getenv('REFRESH_TOKEN')
 nom_proprio = os.getenv('NOM_PROPRIO')
+destinataire = os.getenv('DESTINATAIRE')
+destinataire_cci = os.getenv('DESTINATAIRE_CCI')
+expediteur = os.getenv('EXPEDITEUR')
+
+# Vérifier les valeurs des variables d'environnement (pour le débogage)
+print(f"CLIENT_ID: {client_id}")
+print(f"CLIENT_SECRET: {client_secret}")
+print(f"REFRESH_TOKEN: {refresh_token}")
+print(f"DESTINATAIRE: {destinataire}")
+print(f"DESTINATAIRE_CCI: {destinataire_cci}")
+print(f"EXPEDITEUR: {expediteur}")
+
 # Définir la locale en français (adapter selon ton système)
 try:
     locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
@@ -28,9 +40,9 @@ mois = now.strftime("%B")  # Nom complet du mois (ex. "avril")
 annee = now.year
 
 # Sujet et corps du message
-sujet = f"Avis d'échéance de loyer "
+sujet = f"Avis d'échéance de loyer {mois} {annee}"
 corps = f"""Bonjour,
-Voici l'avis d'échéance de loyer pour le mois de : {mois} {annee}, 
+Voici l'avis d'échéance de loyer pour le mois de : {mois} {annee},
 Cordialement,
 {nom_proprio}"""
 
@@ -44,33 +56,34 @@ if not os.path.exists(pdf_path):
 # Scopes nécessaires pour envoyer des emails
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
-# Chemin pour sauvegarder les jetons
-TOKEN_FILE = 'token.json'
+# Créer les informations d'identification à partir du refresh token
+creds = Credentials.from_authorized_user_info(
+    info={
+        'refresh_token': refresh_token,
+        'client_id': client_id,
+        'client_secret': client_secret,
+        'token_uri': 'https://oauth2.googleapis.com/token'
+    },
+    scopes=SCOPES
+)
 
-# Charger les jetons existants ou en obtenir de nouveaux
-creds = None
-if os.path.exists(TOKEN_FILE):
-    creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
-
-# Si aucun jeton valide n'existe, demander une nouvelle autorisation
-if not creds or not creds.valid:
-    if creds and creds.expired and creds.refresh_token:
+# Rafraîchir le token s'il est expiré
+if not creds.valid:
+    if creds.expired and creds.refresh_token:
+        print("Rafraîchissement du token...")
         creds.refresh(Request())
     else:
-        flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-        creds = flow.run_local_server(port=0)
-    # Sauvegarder les jetons pour une utilisation future
-    with open(TOKEN_FILE, 'w') as token:
-        token.write(creds.to_json())
+        print("Erreur : Les informations d'authentification initiales ne sont pas valides.")
+        exit(1) # Arrêter le script en cas d'erreur d'authentification
 
 # Construire le service Gmail
 service = build('gmail', 'v1', credentials=creds)
 
 # Créer un message multipart (pour le texte et la pièce jointe)
 msg = MIMEMultipart()
-msg['to'] = 'yannick.icard@gmail.com'
-#os.getenv('DESTINATAIRE')  # Adresse email du destinataire
-msg['from'] = os.getenv('EXPEDITEUR')  # Adresse email de l'expéditeur
+msg['to'] = destinataire  # Adresse email du destinataire
+msg['Bcc'] = destinataire_cci
+msg['from'] = expediteur  # Adresse email de l'expéditeur
 msg['subject'] = sujet
 
 # Ajouter le corps du message
@@ -91,7 +104,7 @@ body = {'raw': raw}
 # Envoyer l'email
 try:
     message = service.users().messages().send(userId="me", body=body).execute()
-    print("Email envoyé avec succès !")
+    print(f"Email envoyé avec succès ! ID du message : {message['id']}")
     os.remove(pdf_path)  # Supprime le fichier PDF après l'envoi
-except Exception as e:
-    print(f"Erreur : {e}")
+except HttpError as error:
+    print(f"Erreur lors de l'envoi de l'email : {error}")
