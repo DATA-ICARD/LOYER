@@ -17,7 +17,7 @@ from google.auth.transport.requests import Request
 load_dotenv()
 nom_proprio = os.getenv('NOM_PROPRIO')
 destinataire = os.getenv('DESTINATAIRE_CCI')
-# destinataire_cci = os.getenv('DESTINATAIRE_CCI')
+destinataire_cci = os.getenv('DESTINATAIRE_CCI')
 expediteur = os.getenv('EXPEDITEUR')
 # Définir la locale en français (adapter selon ton système)
 try:
@@ -71,7 +71,7 @@ service = build('gmail', 'v1', credentials=creds)
 
 # Créer un message multipart (pour le texte et la pièce jointe)
 msg = MIMEMultipart()
-#msg['to'] = os.getenv('DESTINATAIRE')
+msg['to'] = os.getenv('DESTINATAIRE_CCI')
 msg['Bcc'] = os.getenv('DESTINATAIRE_CCI')
 msg['from'] =  os.getenv('EXPEDITEUR') # Adresse email de l'expéditeur
 msg['subject'] = sujet
