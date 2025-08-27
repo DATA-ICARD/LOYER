@@ -3,6 +3,8 @@ import matplotlib.image as mpimg
 import os
 from datetime import datetime
 import locale
+import unicodedata
+
 
 # Essayer de charger les variables depuis un .env (utile en local)
 try:
@@ -35,10 +37,24 @@ try:
 except locale.Error:
     print("Locale fr_FR.UTF-8 non disponible, fallback sur locale système.")
 
+# Fonction pour supprimer les accents
+def supprimer_accents(texte):
+    """Supprime les accents d'une chaîne de caractères"""
+    return unicodedata.normalize('NFD', texte).encode('ascii', 'ignore').decode('utf-8')
+
 # Récupérer la date actuelle au format jj-mm-yyyy
 date_contrat = datetime.now().strftime("%d-%m-%Y")
-mois = datetime.now().strftime("%B")  # Nom complet du mois
+mois_avec_accent = datetime.now().strftime("%B")  # Nom complet du mois avec accent
 annee = datetime.now().year
+
+# Dictionnaire personnalisé des mois sans accent
+mois_sans_accent = {
+    1: "janvier", 2: "fevrier", 3: "mars", 4: "avril",
+    5: "mai", 6: "juin", 7: "juillet", 8: "aout",
+    9: "septembre", 10: "octobre", 11: "novembre", 12: "decembre"
+}
+
+mois = mois_sans_accent[datetime.now().month]  # unicodedata
 
 # Créer un document PDF avec matplotlib
 fig, ax = plt.subplots(figsize=(8.5, 11))
