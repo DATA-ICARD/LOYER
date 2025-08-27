@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import os
@@ -59,6 +61,7 @@ mois = mois_sans_accent[datetime.now().month]  # unicodedata
 # Créer un document PDF avec matplotlib
 fig, ax = plt.subplots(figsize=(8.5, 11))
 ax.axis('off')  # Désactiver les axes
+# Créer un document PDF avec matplotlib
 
 # Ajouter le contenu du contrat
 ax.text(0.5, 0.95, f"""\n\nContrat de sous-location\n\n""", fontweight='bold', ha='center', fontsize=12)
@@ -101,7 +104,7 @@ ax.set_ylim(0, 1)
 
 # Sauvegarder le PDF
 pdf_path = f'contrat_sous_location_{mois}_{annee}.pdf'
-plt.savefig(pdf_path, format='pdf', bbox_inches='tight')
+plt.savefig(pdf_path, format='pdf', bbox_inches='tight', dpi=300)  # Ajouter dpi pour meilleure qualité
 plt.close()
 
 print(f"✅ PDF généré : {pdf_path}")
