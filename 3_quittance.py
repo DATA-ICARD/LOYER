@@ -36,9 +36,16 @@ try:
 except locale.Error:
     print("Locale fr_FR.UTF-8 non disponible, fallback sur locale système.")
 
-# Récupérer la date actuelle
-now = datetime.now()
-mois_avec_accent = datetime.now().strftime("%B")  # Nom complet du mois avec accent
+# Récupérer la date actuelle au format jj-mm-yyyy
+date_contrat = datetime.now().strftime("%d-%m-%Y")
+# Récupérer directement le numéro du mois pour éviter les problèmes de locale
+mois_numero = datetime.now().month
+# Mapper directement par numéro de mois pour éviter les problèmes d'encodage
+mois_noms = [
+    'janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin',
+    'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre'
+]
+mois = mois_noms[mois_numero - 1]  # -1 car les listes commencent à 0
 annee = datetime.now().year
 
 # Dictionnaire personnalisé des mois sans accent
