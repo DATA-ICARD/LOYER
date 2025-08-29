@@ -71,6 +71,7 @@ service = build('gmail', 'v1', credentials=creds)
 
 # Créer un message multipart (pour le texte et la pièce jointe)
 msg = MIMEMultipart()
+
 msg['to'] = os.getenv('DESTINATAIRE_CCI')
 msg['Bcc'] = os.getenv('DESTINATAIRE_CCI')
 msg['from'] =  os.getenv('EXPEDITEUR') # Adresse email de l'expéditeur
