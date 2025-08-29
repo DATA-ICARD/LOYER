@@ -1,12 +1,8 @@
-import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import os
 from datetime import datetime
 import locale
-import unicodedata
-
 
 # Essayer de charger les variables depuis un .env (utile en local)
 try:
@@ -22,7 +18,6 @@ adresse_location = os.getenv('ADRESSE_LOCATION')  # Valeur par défaut
 IBAN = os.getenv('IBAN')
 BIC = os.getenv('BIC')
 nom_proprio = os.getenv('NOM_PROPRIO')
-locataire = os.getenv('LOCATAIRE')
 
 # Vérifier que les variables essentielles sont bien chargées
 if not all([adresse_proprio, adresse_location, IBAN, BIC, nom_proprio]):
@@ -39,34 +34,26 @@ try:
 except locale.Error:
     print("Locale fr_FR.UTF-8 non disponible, fallback sur locale système.")
 
-# Fonction pour supprimer les accents
-def supprimer_accents(texte):
-    """Supprime les accents d'une chaîne de caractères"""
-    return unicodedata.normalize('NFD', texte).encode('ascii', 'ignore').decode('utf-8')
-
 # Récupérer la date actuelle au format jj-mm-yyyy
 date_contrat = datetime.now().strftime("%d-%m-%Y")
-mois_avec_accent = datetime.now().strftime("%B")  # Nom complet du mois avec accent
+# Récupérer directement le numéro du mois pour éviter les problèmes de locale
+mois_numero = datetime.now().month
+# Mapper directement par numéro de mois pour éviter les problèmes d'encodage
+mois_noms = [
+    'janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin',
+    'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre'
+]
+mois = mois_noms[mois_numero - 1]  # -1 car les listes commencent à 0
 annee = datetime.now().year
-
-# Dictionnaire personnalisé des mois sans accent
-mois_sans_accent = {
-    1: "janvier", 2: "fevrier", 3: "mars", 4: "avril",
-    5: "mai", 6: "juin", 7: "juillet", 8: "aout",
-    9: "septembre", 10: "octobre", 11: "novembre", 12: "decembre"
-}
-
-mois = mois_sans_accent[datetime.now().month]  # unicodedata
 
 # Créer un document PDF avec matplotlib
 fig, ax = plt.subplots(figsize=(8.5, 11))
 ax.axis('off')  # Désactiver les axes
-# Créer un document PDF avec matplotlib
 
 # Ajouter le contenu du contrat
 ax.text(0.5, 0.95, f"""\n\nContrat de sous-location\n\n""", fontweight='bold', ha='center', fontsize=12)
 ax.text(0.1, 0.90, f"""Le contrat de bail de sous-location est conclu entre les soussignés :\n\n""", fontsize=9)
-ax.text(0.1, 0.88, f"""{locataire}, désigné ci-après « le locataire principal » d’une part, et {nom_proprio},\n""", fontsize=9)
+ax.text(0.1, 0.88, f"""B&B conciergerie, désigné ci-après « le locataire principal » d’une part, et {nom_proprio},\n""", fontsize=9)
 ax.text(0.1, 0.85, f"""désigné ci-après « le bailleur » d’autre part.\n""", fontsize=9)
 ax.text(0.1, 0.82, f"""Il est rappelé que le propriétaire du logement situé au {adresse_location}\n""", fontsize=9)
 ax.text(0.1, 0.79, f"""autorise la sous-location de son bien par une lettre adressée au locataire principal, et dont\n""", fontsize=9)
@@ -104,7 +91,7 @@ ax.set_ylim(0, 1)
 
 # Sauvegarder le PDF
 pdf_path = f'contrat_sous_location_{mois}_{annee}.pdf'
-plt.savefig(pdf_path, format='pdf', bbox_inches='tight', dpi=300)  # Ajouter dpi pour meilleure qualité
+plt.savefig(pdf_path, format='pdf', bbox_inches='tight')
 plt.close()
 
 print(f"✅ PDF généré : {pdf_path}")

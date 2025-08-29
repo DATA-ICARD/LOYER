@@ -27,8 +27,15 @@ except locale.Error:
 
 # Récupérer la date actuelle
 now = datetime.now()
-mois = now.strftime("%B")  # Nom complet du mois (ex. "avril")
-annee = now.year
+# Récupérer directement le numéro du mois pour éviter les problèmes de locale
+mois_numero = datetime.now().month
+# Mapper directement par numéro de mois pour éviter les problèmes d'encodage
+mois_noms = [
+    'janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin',
+    'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre'
+]
+mois = mois_noms[mois_numero - 1]  # -1 car les listes commencent à 0
+annee = datetime.now().year
 
 # Sujet et corps du message
 sujet = f"Contrat de sous location "
@@ -72,9 +79,9 @@ service = build('gmail', 'v1', credentials=creds)
 # Créer un message multipart (pour le texte et la pièce jointe)
 msg = MIMEMultipart()
 
-msg['to'] = os.getenv('DESTINATAIRE_CCI')
-msg['Bcc'] = os.getenv('DESTINATAIRE_CCI')
-msg['from'] =  os.getenv('EXPEDITEUR') # Adresse email de l'expéditeur
+msg['to'] = "yannick.icard@gmail.com" #os.getenv('DESTINATAIRE_CCI')
+msg['Bcc'] = "celineyannick@gmail.com" #os.getenv('DESTINATAIRE_CCI')
+msg['from'] =  "yannick.icard@gmail.com" #os.getenv('EXPEDITEUR') # Adresse email de l'expéditeur
 msg['subject'] = sujet
 
 # Ajouter le corps du message
