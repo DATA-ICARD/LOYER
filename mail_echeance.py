@@ -22,11 +22,17 @@ try:
 except locale.Error:
     locale.setlocale(locale.LC_TIME, 'fr_FR')
 
-# Récupérer la date actuelle
-now = datetime.now()
-mois = now.strftime("%B")  # Nom complet du mois (ex. "avril")
-annee = now.year
-
+# Récupérer la date actuelle au format jj-mm-yyyy
+date_contrat = datetime.now().strftime("%d-%m-%Y")
+# Récupérer directement le numéro du mois pour éviter les problèmes de locale
+mois_numero = datetime.now().month
+# Mapper directement par numéro de mois pour éviter les problèmes d'encodage
+mois_noms = [
+    'janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin',
+    'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre'
+]
+mois = mois_noms[mois_numero - 1]  # -1 car les listes commencent à 0
+annee = datetime.now().year
 # Sujet et corps du message
 sujet = f"Avis d'échéance de loyer "
 corps = f"""Bonjour,
@@ -68,9 +74,9 @@ service = build('gmail', 'v1', credentials=creds)
 
 # Créer un message multipart (pour le texte et la pièce jointe)
 msg = MIMEMultipart()
-msg['to'] = os.getenv('DESTINATAIRE')  # Adresse email du destinataire
-msg['Bcc'] = os.getenv('DESTINATAIRE_CCI')
-msg['from'] = os.getenv('EXPEDITEUR')  # Adresse email de l'expéditeur
+msg['to'] = "yannick.icard@gmail.com" #os.getenv('DESTINATAIRE')  # Adresse email du destinataire
+msg['Bcc'] = "celineyannickbnb@gmail.com" #os.getenv('DESTINATAIRE_CCI')
+msg['from'] = "yannick.icard@gmail.com" #os.getenv('EXPEDITEUR')  # Adresse email de l'expéditeur
 msg['subject'] = sujet
 
 # Ajouter le corps du message
