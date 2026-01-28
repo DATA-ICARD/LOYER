@@ -53,12 +53,12 @@ msg['Subject'] = sujet
 msg.attach(MIMEText(corps, 'plain'))
 
 # Ajouter le fichier PDF en pièce jointe
-part = MIMEBase('application', 'octet-stream')
-with open(pdf_path, 'rb') as file:
-    part.set_payload(file.read())
-encoders.encode_base64(part)
-part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(pdf_path)}')
-msg.attach(part)
+##part = MIMEBase('application', 'octet-stream')
+##with open(pdf_path, 'rb') as file:
+#    part.set_payload(file.read())
+#encoders.encode_base64(part)
+#part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(pdf_path)}')
+#msg.attach(part)
 
 # Envoyer l'email via SMTP Gmail
 try:
