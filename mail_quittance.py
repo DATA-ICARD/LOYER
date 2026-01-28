@@ -32,8 +32,8 @@ Cordialement,
 pdf_path = f'quittance_loyer_{mois}_{annee}.pdf'
 
 # Vérifier que le fichier PDF existe
-if not os.path.exists(pdf_path):
-    raise FileNotFoundError(f"Le fichier {pdf_path} n'existe pas. Assure-toi qu'il est dans le bon dossier.")
+#if not os.path.exists(pdf_path):
+ #   raise FileNotFoundError(f"Le fichier {pdf_path} n'existe pas. Assure-toi qu'il est dans le bon dossier.")
 
 # Récupérer les identifiants depuis les variables d'environnement
 expediteur = os.getenv('EXPEDITEUR')
