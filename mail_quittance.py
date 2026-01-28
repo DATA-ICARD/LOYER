@@ -29,7 +29,7 @@ Cordialement,
 {nom_proprio}"""
 
 # Chemin du fichier PDF
-pdf_path = f'quittance_loyer_{mois}_{annee}.pdf'
+#pdf_path = f'quittance_loyer_{mois}_{annee}.pdf'
 
 # Vérifier que le fichier PDF existe
 #if not os.path.exists(pdf_path):
@@ -69,7 +69,7 @@ try:
         server.send_message(msg)
     
     print("Email envoyé avec succès !")
-    os.remove(pdf_path)  # Supprime le fichier PDF après l'envoi
+   ## os.remove(pdf_path)  # Supprime le fichier PDF après l'envoi
 except Exception as e:
     print(f"Erreur lors de l'envoi : {e}")
 
