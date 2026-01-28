@@ -1,35 +1,28 @@
-import base64
 import os
-import locale
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
+import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
 from dotenv import load_dotenv
 from datetime import datetime
-from google.auth.transport.requests import Request
-
 
 # Charger les variables d'environnement depuis le fichier .env
 load_dotenv(override=False)
 nom_proprio = os.getenv('NOM_PROPRIO')
-destinataire_cci = os.getenv('DESTINATAIRE_CCI')
-# Définir la locale en français (adapter selon ton système)
-try:
-    locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
-except locale.Error:
-    locale.setlocale(locale.LC_TIME, 'fr_FR')
 
-# Récupérer la date actuelle
-now = datetime.now()
-mois = now.strftime("%B").lower()  # Nom complet du mois (ex. "avril")
-annee = now.year
+# Récupérer directement le numéro du mois pour éviter les problèmes de locale
+mois_numero = datetime.now().month
+# Mapper directement par numéro de mois pour éviter les problèmes d'encodage
+mois_noms = [
+    'janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin',
+    'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre'
+]
+mois = mois_noms[mois_numero - 1]  # -1 car les listes commencent à 0
+annee = datetime.now().year
 
 # Sujet et corps du message
-sujet = f"Quittance de loyer "
+sujet = f"Quittance de loyer"
 corps = f"""Bonjour,
 Voici votre quittance de loyer pour le mois de : {mois} {annee}, 
 Cordialement,
@@ -42,37 +35,19 @@ pdf_path = f'quittance_loyer_{mois}_{annee}.pdf'
 if not os.path.exists(pdf_path):
     raise FileNotFoundError(f"Le fichier {pdf_path} n'existe pas. Assure-toi qu'il est dans le bon dossier.")
 
-# Scopes nécessaires pour envoyer des emails
-SCOPES = ['https://www.googleapis.com/auth/gmail.send']
-
-# Chemin pour sauvegarder les jetons
-TOKEN_FILE = 'token.json'
-
-# Charger les jetons existants ou en obtenir de nouveaux
-creds = None
-if os.path.exists(TOKEN_FILE):
-    creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
-
-# Si aucun jeton valide n'existe, demander une nouvelle autorisation
-if not creds or not creds.valid:
-    if creds and creds.expired and creds.refresh_token:
-        creds.refresh(Request())
-    else:
-        flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-        creds = flow.run_local_server(port=0)
-    # Sauvegarder les jetons pour une utilisation future
-    with open(TOKEN_FILE, 'w') as token:
-        token.write(creds.to_json())
-
-# Construire le service Gmail
-service = build('gmail', 'v1', credentials=creds)
+# Récupérer les identifiants depuis les variables d'environnement
+expediteur = os.getenv('EXPEDITEUR')
+destinataire = os.getenv('DESTINATAIRE')
+destinataire_cci = os.getenv('DESTINATAIRE_CCI')
+mot_de_passe = os.getenv('GMAIL_APP_PASSWORD')  # Le mot de passe d'application
 
 # Créer un message multipart (pour le texte et la pièce jointe)
 msg = MIMEMultipart()
-#msg['to'] = os.getenv('DESTINATAIRE')  # Adresse email du destinataire
-msg['Bcc'] = os.getenv('DESTINATAIRE_CCI')
-msg['from'] = os.getenv('EXPEDITEUR')  # Adresse email de l'expéditeur
-msg['subject'] = sujet
+msg['From'] = expediteur
+msg['To'] = destinataire
+if destinataire_cci:
+    msg['Bcc'] = destinataire_cci
+msg['Subject'] = sujet
 
 # Ajouter le corps du message
 msg.attach(MIMEText(corps, 'plain'))
@@ -85,14 +60,16 @@ encoders.encode_base64(part)
 part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(pdf_path)}')
 msg.attach(part)
 
-# Encoder le message pour l'API Gmail
-raw = base64.urlsafe_b64encode(msg.as_bytes()).decode()
-body = {'raw': raw}
-
-# Envoyer l'email
+# Envoyer l'email via SMTP Gmail
 try:
-    message = service.users().messages().send(userId="me", body=body).execute()
+    # Connexion au serveur SMTP de Gmail
+    with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        server.starttls()  # Sécuriser la connexion
+        server.login(expediteur, mot_de_passe)
+        server.send_message(msg)
+    
     print("Email envoyé avec succès !")
     os.remove(pdf_path)  # Supprime le fichier PDF après l'envoi
 except Exception as e:
-    print(f"Erreur : {e}")
+    print(f"Erreur lors de l'envoi : {e}")
+

@@ -34,10 +34,7 @@ jobs:
         echo "DESTINATAIRE=${{ secrets.DESTINATAIRE }}" >> $GITHUB_ENV
         echo "DESTINATAIRE_CCI=${{ secrets.DESTINATAIRE_CCI }}" >> $GITHUB_ENV
         echo "EXPEDITEUR=${{ secrets.EXPEDITEUR }}" >> $GITHUB_ENV
-        echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}" >> $GITHUB_ENV
-        echo "EMAIL_PORT=${{ secrets.EMAIL_PORT }}" >> $GITHUB_ENV
-        echo "EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}" >> $GITHUB_ENV
-        echo "EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}" >> $GITHUB_ENV
+        echo "GMAIL_APP_PASSWORD=${{ secrets.GMAIL_APP_PASSWORD }}" >> $GITHUB_ENV
         echo "GOOGLE_SHEET_URL=${{ secrets.GOOGLE_SHEET_URL }}" >> $GITHUB_ENV
         echo "DB_PATH=${{ secrets.DB_PATH }}" >> $GITHUB_ENV
 
@@ -46,3 +43,5 @@ jobs:
 
     - name: Run mail_quittance.py
       run: python mail_quittance.py
+
+
