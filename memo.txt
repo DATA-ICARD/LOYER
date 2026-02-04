@@ -1,0 +1,29 @@
+pour accéder à un enrironnement virtuel :
+Création : 
+python -m venv venv
+puis pour l\'activer :
+source venv/Scripts/activate
+pour récupérer tous les packages dans un requirements.txt faire :
+pip freeze > requirements.txt
+et ça copie tout !!!!
+Le fichier .env est en Git ignore et n'est aps visible
+
+----------------------------------------------------
+==> Étape 1 : Régénérer un token valide localement
+
+Supprimez votre fichier token.json local
+Exécutez votre script localement :
+
+python mail_quittance.py
+
+Une fenêtre de navigateur s'ouvrira pour l'authentification Google
+Connectez-vous et autorisez l'application
+Un nouveau token.json sera créé
+Étape 2 : Mettre à jour le secret GitHub
+
+Ouvrez le fichier token.json généré
+Copiez tout son contenu
+Dans GitHub : Settings → Secrets and variables → Actions
+Créez ou mettez à jour le secret GOOGLE_TOKEN_JSON avec ce contenu
+
+Copier le tocken dans le fichier tocken.json dans github et valider à 2 reprises ce qui va mettre à jour le SECRET puis le fichier.
