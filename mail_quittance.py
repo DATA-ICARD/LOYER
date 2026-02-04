@@ -29,11 +29,11 @@ Cordialement,
 {nom_proprio}"""
 
 # Chemin du fichier PDF
-#pdf_path = f'quittance_loyer_{mois}_{annee}.pdf'
+pdf_path = f'quittance_loyer_{mois}_{annee}.pdf'
 
 # Vérifier que le fichier PDF existe
-#if not os.path.exists(pdf_path):
- #   raise FileNotFoundError(f"Le fichier {pdf_path} n'existe pas. Assure-toi qu'il est dans le bon dossier.")
+if not os.path.exists(pdf_path):
+   raise FileNotFoundError(f"Le fichier {pdf_path} n'existe pas. Assure-toi qu'il est dans le bon dossier.")
 
 # Récupérer les identifiants depuis les variables d'environnement
 expediteur = os.getenv('EXPEDITEUR')
@@ -53,12 +53,12 @@ msg['Subject'] = sujet
 msg.attach(MIMEText(corps, 'plain'))
 
 # Ajouter le fichier PDF en pièce jointe
-##part = MIMEBase('application', 'octet-stream')
-##with open(pdf_path, 'rb') as file:
-#    part.set_payload(file.read())
-#encoders.encode_base64(part)
-#part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(pdf_path)}')
-#msg.attach(part)
+part = MIMEBase('application', 'octet-stream')
+with open(pdf_path, 'rb') as file:
+   part.set_payload(file.read())
+encoders.encode_base64(part)
+part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(pdf_path)}')
+msg.attach(part)
 
 # Envoyer l'email via SMTP Gmail
 try:
@@ -69,7 +69,7 @@ try:
         server.send_message(msg)
     
     print("Email envoyé avec succès !")
-   ## os.remove(pdf_path)  # Supprime le fichier PDF après l'envoi
+    os.remove(pdf_path)  # Supprime le fichier PDF après l'envoi
 except Exception as e:
     print(f"Erreur lors de l'envoi : {e}")
 
