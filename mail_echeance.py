@@ -16,12 +16,6 @@ from google.auth.transport.requests import Request
 load_dotenv()
 nom_proprio = os.getenv('NOM_PROPRIO')
 
-# ✅ Recréer token.json depuis le secret GitHub
-token_json = os.getenv('GOOGLE_TOKEN_JSON')
-if token_json:
-    with open('token.json', 'w') as f:
-        f.write(token_json)
-
 # Définir la locale en français (adapter selon ton système)
 try:
     locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
