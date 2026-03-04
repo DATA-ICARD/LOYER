@@ -52,7 +52,6 @@ jobs:
         echo "EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}" >> $GITHUB_ENV
         echo "GOOGLE_SHEET_URL=${{ secrets.GOOGLE_SHEET_URL }}" >> $GITHUB_ENV
         echo "DB_PATH=${{ secrets.DB_PATH }}" >> $GITHUB_ENV
-        echo "GOOGLE_TOKEN_JSON=${{ secrets.GOOGLE_TOKEN_JSON }}" >> $GITHUB_ENV  
 
     - name: Create token.json from secret  
       run: echo '${{ secrets.GOOGLE_TOKEN_JSON }}' > token.json
